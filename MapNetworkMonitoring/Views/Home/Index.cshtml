@@ -1,0 +1,44 @@
+﻿@model IEnumerable<MapNetworkMonitoring.Models.TM_Plant>
+
+<script type="text/javascript">
+
+        function resizeIframe(obj) {
+            obj.style.height = parseInt(obj.contentWindow.document.body.scrollHeight) + 20 + 'px';
+            obj.style.width = parseInt(obj.contentWindow.document.body.scrollWidth) + 20 + 'px';
+        }
+
+</script>
+
+@{
+    ViewBag.Title = "TNC Map Network";
+}
+
+<table id="tbl-summary">
+    <thead>
+        <tr>
+            <th>Site</th>
+            <th>Total</th>
+            <th>Up</th>
+            <th>Down @Html.ActionLink("Graph", "GraphDeviceDown", "Report")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.Summary)
+        {
+            <tr>
+                <td>@item.Site</td>
+                <td>@item.Total</td>
+                <td class="device-up">@item.Up</td>
+                <td class="device-down">@item.Down</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@foreach (var item in Model)
+{
+    var qStr = Url.Action("GetMap", "Home") + "?plantId=" + item.Id + "&mode=" + (Request.QueryString["mode"] != null && Request.QueryString["mode"] == "admin" ? Request.QueryString["mode"] : "user");
+    
+    <iframe src="@qStr" onload="javascript:resizeIframe(this);"></iframe>
+}
+

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6ecf31a5eebf4eb49b02bbc992ca90df" Name="Diagram1">
+        <EntityTypeShape EntityType="MapNetMonModel.TM_Plant" Width="1.5" PointX="3.375" PointY="13.75" />
+        <EntityTypeShape EntityType="MapNetMonModel.TM_Status" Width="1.5" PointX="1.375" PointY="10.625" />
+        <EntityTypeShape EntityType="MapNetMonModel.TD_Neighbor" Width="1.5" PointX="9.625" PointY="10.625" />
+        <EntityTypeShape EntityType="MapNetMonModel.TM_Command" Width="1.5" PointX="9.625" PointY="12.875" />
+        <EntityTypeShape EntityType="MapNetMonModel.TM_Type" Width="1.5" PointX="7.625" PointY="13.25" />
+        <AssociationConnector Association="MapNetMonModel.FK_TM_Command_TM_Type" />
+        <EntityTypeShape EntityType="MapNetMonModel.TM_Authentication" Width="1.5" PointX="9.625" PointY="15" />
+        <EntityTypeShape EntityType="MapNetMonModel.TM_Factory" Width="1.5" PointX="3.375" PointY="11.125" />
+        <AssociationConnector Association="MapNetMonModel.FK_TM_Factory_TM_Plant" />
+        <EntityTypeShape EntityType="MapNetMonModel.TD_Device" Width="1.5" PointX="5.5" PointY="10.625" />
+        <AssociationConnector Association="MapNetMonModel.FK_TD_Device_TM_Status" />
+        <AssociationConnector Association="MapNetMonModel.FK_TD_Device_TM_Type" />
+        <AssociationConnector Association="MapNetMonModel.FK_TD_MainDevice_TM_Factory" />
+        <AssociationConnector Association="MapNetMonModel.FK_TD_Neighbor_TD_Device1" />
+        <EntityTypeShape EntityType="MapNetMonModel.TM_Predefined" Width="1.5" PointX="1.375" PointY="14.875" />
+        <EntityTypeShape EntityType="MapNetMonModel.VW_Device_Summary" Width="1.5" PointX="1.375" PointY="12.625" />
+        <EntityTypeShape EntityType="MapNetMonModel.TD_DeadTransaction" Width="1.5" PointX="7.625" PointY="11.125" />
+        <AssociationConnector Association="MapNetMonModel.FK_TD_DeadTransaction_TD_Device" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

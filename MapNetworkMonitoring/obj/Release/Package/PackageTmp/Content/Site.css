@@ -1,0 +1,135 @@
+﻿div.container {
+    width: 100%;
+}
+
+img.map {
+    z-index: 0;
+}
+
+div.device {
+    position: absolute;
+    z-index: 1;
+    padding: 3px;
+    cursor: pointer;
+    background-color:rgba(0,0,0,0.3);
+
+    border: 4px solid rgba(0,0,0,0.4);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+div.div-img {
+    
+}
+
+img.image {
+    vertical-align: middle;
+}
+
+img.img-device {
+    
+}
+
+img.img-status {
+    
+}
+
+div.text-device {
+    color: white;
+    font-weight: bold;
+}
+
+div.tool-bar {
+    position: absolute;
+    cursor: pointer;
+    top: 15px;
+    left: 15px;
+}
+
+div.tool-bar img {
+    width: 50px;
+    margin-left: 15px;
+}
+
+select {
+    width: 200px;
+}
+
+form {
+    font-size: 13px;
+}
+
+.display {
+    width: 120px;
+}
+
+p.section {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+span.updated {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.hide {
+    display: none;
+}
+
+div#dialog-int-status {
+    font-size: 12px;
+}
+
+.font-bold {
+    font-weight: bold !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+#div-loading {
+    padding: 15px;
+}
+
+.inline {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.device-count {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.red-border {
+  border-color: rgba(0,0,0,0.7) !important;
+}
+
+
+#tbl-summary {
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#tbl-summary thead tr th, #tbl-summary tbody tr td {
+    text-align: left;
+    min-width: 80px;
+    padding: 5px;
+}
+
+#tbl-summary thead tr th {
+    border-bottom: 1px solid black;
+}
+
+.device-up {
+    color: green;
+}
+
+device-down {
+    color: red;
+}

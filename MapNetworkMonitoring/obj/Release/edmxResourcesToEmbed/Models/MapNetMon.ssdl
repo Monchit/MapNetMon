@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MapNetMonModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="MapNetMonModelStoreContainer">
+    <EntitySet Name="TD_DeadTransaction" EntityType="MapNetMonModel.Store.TD_DeadTransaction" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Device" EntityType="MapNetMonModel.Store.TD_Device" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Neighbor" EntityType="MapNetMonModel.Store.TD_Neighbor" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Authentication" EntityType="MapNetMonModel.Store.TM_Authentication" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Command" EntityType="MapNetMonModel.Store.TM_Command" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Factory" EntityType="MapNetMonModel.Store.TM_Factory" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Plant" EntityType="MapNetMonModel.Store.TM_Plant" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Predefined" EntityType="MapNetMonModel.Store.TM_Predefined" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Status" EntityType="MapNetMonModel.Store.TM_Status" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Type" EntityType="MapNetMonModel.Store.TM_Type" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="VW_Device_Summary" EntityType="MapNetMonModel.Store.VW_Device_Summary" store:Type="Views" store:Schema="dbo" store:Name="VW_Device_Summary">
+      <DefiningQuery>SELECT 
+      [VW_Device_Summary].[Id] AS [Id], 
+      [VW_Device_Summary].[Site] AS [Site], 
+      [VW_Device_Summary].[Total] AS [Total], 
+      [VW_Device_Summary].[Up] AS [Up], 
+      [VW_Device_Summary].[Down] AS [Down]
+      FROM [dbo].[VW_Device_Summary] AS [VW_Device_Summary]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_TD_DeadTransaction_TD_Device" Association="MapNetMonModel.Store.FK_TD_DeadTransaction_TD_Device">
+      <End Role="TD_Device" EntitySet="TD_Device" />
+      <End Role="TD_DeadTransaction" EntitySet="TD_DeadTransaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Device_TM_Status" Association="MapNetMonModel.Store.FK_TD_Device_TM_Status">
+      <End Role="TM_Status" EntitySet="TM_Status" />
+      <End Role="TD_Device" EntitySet="TD_Device" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Device_TM_Type" Association="MapNetMonModel.Store.FK_TD_Device_TM_Type">
+      <End Role="TM_Type" EntitySet="TM_Type" />
+      <End Role="TD_Device" EntitySet="TD_Device" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_MainDevice_TM_Factory" Association="MapNetMonModel.Store.FK_TD_MainDevice_TM_Factory">
+      <End Role="TM_Factory" EntitySet="TM_Factory" />
+      <End Role="TD_Device" EntitySet="TD_Device" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Neighbor_TD_Device1" Association="MapNetMonModel.Store.FK_TD_Neighbor_TD_Device1">
+      <End Role="TD_Device" EntitySet="TD_Device" />
+      <End Role="TD_Neighbor" EntitySet="TD_Neighbor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TM_Command_TM_Type" Association="MapNetMonModel.Store.FK_TM_Command_TM_Type">
+      <End Role="TM_Type" EntitySet="TM_Type" />
+      <End Role="TM_Command" EntitySet="TM_Command" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TM_Factory_TM_Plant" Association="MapNetMonModel.Store.FK_TM_Factory_TM_Plant">
+      <End Role="TM_Plant" EntitySet="TM_Plant" />
+      <End Role="TM_Factory" EntitySet="TM_Factory" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="TD_DeadTransaction">
+    <Key>
+      <PropertyRef Name="IP" />
+      <PropertyRef Name="DeadDate" />
+    </Key>
+    <Property Name="IP" Type="nvarchar" Nullable="false" MaxLength="15" />
+    <Property Name="DeadDate" Type="datetime" Nullable="false" />
+    <Property Name="RebornDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="TD_Device">
+    <Key>
+      <PropertyRef Name="IP" />
+    </Key>
+    <Property Name="IP" Type="nvarchar" Nullable="false" MaxLength="15" />
+    <Property Name="Type" Type="smallint" Nullable="false" />
+    <Property Name="FactoryId" Type="tinyint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
+    <Property Name="MainDevice" Type="bit" Nullable="false" />
+    <Property Name="X" Type="int" Nullable="false" />
+    <Property Name="Y" Type="int" Nullable="false" />
+    <Property Name="XMain" Type="int" />
+    <Property Name="YMain" Type="int" />
+    <Property Name="ConfigFile" Type="nvarchar" MaxLength="255" />
+    <Property Name="UplinkIP" Type="nvarchar" MaxLength="15" />
+    <Property Name="UplinkPort" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastOn" Type="datetime" />
+    <Property Name="Status" Type="bit" Nullable="false" />
+    <Property Name="EntryDate" Type="datetime" Nullable="false" />
+    <Property Name="LastUpdateDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="TD_Neighbor">
+    <Key>
+      <PropertyRef Name="IP" />
+      <PropertyRef Name="NIP" />
+    </Key>
+    <Property Name="IP" Type="nvarchar" Nullable="false" MaxLength="15" />
+    <Property Name="NIP" Type="nvarchar" Nullable="false" MaxLength="15" />
+    <Property Name="AnchorA" Type="nvarchar" Nullable="false" MaxLength="9" />
+    <Property Name="AnchorB" Type="nvarchar" Nullable="false" MaxLength="9" />
+  </EntityType>
+  <EntityType Name="TM_Authentication">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="tinyint" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" Nullable="false" MaxLength="25" />
+    <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="TM_Command">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="TypeId" />
+    </Key>
+    <Property Name="Id" Type="smallint" Nullable="false" />
+    <Property Name="TypeId" Type="smallint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="Command" Type="nvarchar" Nullable="false" MaxLength="300" />
+  </EntityType>
+  <EntityType Name="TM_Factory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="tinyint" Nullable="false" />
+    <Property Name="PlantId" Type="tinyint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Img" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="TM_Plant">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="tinyint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="Img" Type="nvarchar" Nullable="false" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="TM_Predefined">
+    <Key>
+      <PropertyRef Name="BGWidth" />
+    </Key>
+    <Property Name="BGWidth" Type="int" Nullable="false" />
+    <Property Name="FontSize" Type="float" Nullable="false" />
+    <Property Name="LineWidth" Type="tinyint" Nullable="false" />
+    <Property Name="LineColor" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Unit" Type="nvarchar" Nullable="false" MaxLength="5" />
+    <Property Name="ParentHilightColor" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="ChildHilightColor" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="HilightDuration" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TM_Status">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bit" Nullable="false" />
+    <Property Name="Img" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="Width" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TM_Type">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="smallint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="Img" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="Width" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'MapNetMon.dbo.VW_Device_Summary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="VW_Device_Summary">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="tinyint" Nullable="false" />
+    <Property Name="Site" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="Total" Type="int" />
+    <Property Name="Up" Type="int" />
+    <Property Name="Down" Type="int" />
+  </EntityType>
+  <Association Name="FK_TD_DeadTransaction_TD_Device">
+    <End Role="TD_Device" Type="MapNetMonModel.Store.TD_Device" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_DeadTransaction" Type="MapNetMonModel.Store.TD_DeadTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Device">
+        <PropertyRef Name="IP" />
+      </Principal>
+      <Dependent Role="TD_DeadTransaction">
+        <PropertyRef Name="IP" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Device_TM_Status">
+    <End Role="TM_Status" Type="MapNetMonModel.Store.TM_Status" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Device" Type="MapNetMonModel.Store.TD_Device" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Status">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TD_Device">
+        <PropertyRef Name="Status" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Device_TM_Type">
+    <End Role="TM_Type" Type="MapNetMonModel.Store.TM_Type" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Device" Type="MapNetMonModel.Store.TD_Device" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Type">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TD_Device">
+        <PropertyRef Name="Type" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_MainDevice_TM_Factory">
+    <End Role="TM_Factory" Type="MapNetMonModel.Store.TM_Factory" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Device" Type="MapNetMonModel.Store.TD_Device" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Factory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TD_Device">
+        <PropertyRef Name="FactoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Neighbor_TD_Device1">
+    <End Role="TD_Device" Type="MapNetMonModel.Store.TD_Device" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Neighbor" Type="MapNetMonModel.Store.TD_Neighbor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Device">
+        <PropertyRef Name="IP" />
+      </Principal>
+      <Dependent Role="TD_Neighbor">
+        <PropertyRef Name="IP" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TM_Command_TM_Type">
+    <End Role="TM_Type" Type="MapNetMonModel.Store.TM_Type" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TM_Command" Type="MapNetMonModel.Store.TM_Command" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Type">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TM_Command">
+        <PropertyRef Name="TypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TM_Factory_TM_Plant">
+    <End Role="TM_Plant" Type="MapNetMonModel.Store.TM_Plant" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TM_Factory" Type="MapNetMonModel.Store.TM_Factory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Plant">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TM_Factory">
+        <PropertyRef Name="PlantId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

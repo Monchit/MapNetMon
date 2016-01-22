@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapNetworkMonitoring", "MapNetworkMonitoring\MapNetworkMonitoring.csproj", "{12DFECC6-A6E5-4A36-B4A6-456ED6365465}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoUpdateNWDeviceStatus", "AutoUpdateNWDeviceStatus\AutoUpdateNWDeviceStatus.csproj", "{4089F49A-C378-43E8-B9C2-93FC408FC0F9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12DFECC6-A6E5-4A36-B4A6-456ED6365465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12DFECC6-A6E5-4A36-B4A6-456ED6365465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12DFECC6-A6E5-4A36-B4A6-456ED6365465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12DFECC6-A6E5-4A36-B4A6-456ED6365465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4089F49A-C378-43E8-B9C2-93FC408FC0F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4089F49A-C378-43E8-B9C2-93FC408FC0F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4089F49A-C378-43E8-B9C2-93FC408FC0F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4089F49A-C378-43E8-B9C2-93FC408FC0F9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

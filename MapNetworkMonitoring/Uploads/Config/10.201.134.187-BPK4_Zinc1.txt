@@ -1,0 +1,113 @@
+hostname BPK4_APF_Zinc_1
+!
+enable secret 5 $1$Ry7X$17rJkoSGZO7cuVub5zats/
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa authorization exec default local
+!
+aaa session-id common
+clock timezone WAST 7
+!
+!
+!
+dot11 ssid fac
+   authentication open
+   guest-mode
+!
+power inline negotiation prestandard source
+!
+!
+username admin privilege 15 secret 5 $1$amUO$xvNaP2f.DONLZezzyO3eQ1
+!
+bridge irb
+!
+!
+interface Dot11Radio0
+ no ip address
+ no ip route-cache
+ !
+ encryption key 1 size 128bit 7 6B4B7C3448256951204249664755 transmit-key
+ encryption mode wep mandatory
+ !
+ ssid fac
+ !
+ channel 2412
+ station-role root
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+ bridge-group 1 spanning-disabled
+!
+interface Dot11Radio1
+ no ip address
+ no ip route-cache
+ shutdown
+ no dfs band block
+ channel dfs
+ station-role root
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+ bridge-group 1 spanning-disabled
+!
+interface FastEthernet0
+ no ip address
+ no ip route-cache
+ duplex auto
+ speed auto
+ bridge-group 1
+ no bridge-group 1 source-learning
+ bridge-group 1 spanning-disabled
+ hold-queue 160 in
+!
+interface BVI1
+ ip address 10.201.134.187 255.255.240.0
+ no ip route-cache
+!
+ip default-gateway 10.201.128.254
+ip http server
+ip http authentication local
+no ip http secure-server
+ip http help-path http://www.cisco.com/warp/public/779/smbiz/prodconfig/help/eag
+ip radius source-interface BVI1
+snmp-server community tnc RO
+snmp-server location BPK2_Line
+snmp-server contact TNC
+snmp-server chassis-id Factory2_Middleline_B1353_AP
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps tty
+snmp-server enable traps entity
+snmp-server enable traps disassociate
+snmp-server enable traps deauthenticate
+snmp-server enable traps authenticate-fail
+snmp-server enable traps dot11-qos
+snmp-server enable traps switch-over
+snmp-server enable traps rogue-ap
+snmp-server enable traps wlan-wep
+snmp-server enable traps config
+snmp-server enable traps syslog
+snmp-server enable traps aaa_server
+snmp-server host 10.201.32.251 tnc
+bridge 1 route ip
+!
+!
+!
+line con 0
+ password 7 121504031B1F19002F
+ transport output all
+line vty 0 4
+ password 7 07032058471D0C0112
+ transport input all
+ transport output all
+line vty 5 15
+ transport input all
+ transport output all
+!
+end

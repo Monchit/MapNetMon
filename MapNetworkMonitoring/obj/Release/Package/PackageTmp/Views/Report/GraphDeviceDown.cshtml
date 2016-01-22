@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Graph Device Down";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#dtFrom").datepicker({
+            //defaultDate: "+1w",
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            numberOfMonths: 1,
+            maxDate: "0",
+            onClose: function (selectedDate) {
+                $("#dtTo").datepicker("option", "minDate", selectedDate);
+            }
+        });
+        $("#dtTo").datepicker({
+            //defaultDate: "+1w",
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            numberOfMonths: 1,
+            maxDate: "0",
+            onClose: function (selectedDate) {
+                $("#dtFrom").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        @*$.getJSON('@Url.Action("GetPlant","Report")', {}, function (plants) {
+            var list = $('select#selPlant');
+            list.find('option').remove();
+            list.append("<option value='0'>-Select Plant-</option>");
+            $(plants).each(function (index, plant) {
+                list.append('<option value="' + plant.Id + '">' + plant.Name + '</option>');
+            });
+        });*@
+
+        $("#selPlant").change(function () {
+            var plant = $(this).val();
+            $.getJSON('@Url.Action("GetFac","Report")', { plant : plant }, function (facs) {
+                var list = $('select#selFac');
+                list.find('option').remove();
+                list.append("<option value=''>-Select Factory-</option>");
+                $(facs).each(function (index, fac) {
+                    list.append('<option value="' + fac.Id + '">' + fac.Name + '</option>');
+                });
+            });
+        });
+
+        $('#btnSubmit').click(function () {
+            var obj = new Object();
+            obj.plant = $("#selPlant").val();
+            obj.dtFrom = $("#dtFrom").val();
+            obj.dtTo = $("#dtTo").val();
+            obj.fac = $("#selFac").val();
+            $.get("@Url.Action("_GetGraphDeviceDown", "Report")", obj, function (data) {
+                $("#divShowGraph").html(data);
+            });
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<form>
+    Select Plant : <select id="selPlant" name="selPlant">
+                        <option value="0"></option>
+                        @foreach (var item in ViewBag.SelectPlant)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                   </select>
+    Select Factory : <select id="selFac" name="selFac">
+                        
+                     </select>
+    Select Date From : <input type="text" id="dtFrom" name="dtFrom" />
+    Select Date To : <input type="text" id="dtTo" name="dtTo" />
+    <button type="button" id="btnSubmit" name="btnSubmit">Submit</button>
+</form>
+
+<div id="divShowGraph"></div>

@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="MapNetMonModelStoreContainer" CdmEntityContainer="MapNetMonEntities">
+    <EntitySetMapping Name="TM_Plant">
+      <EntityTypeMapping TypeName="MapNetMonModel.TM_Plant">
+        <MappingFragment StoreEntitySet="TM_Plant">
+          <ScalarProperty Name="Img" ColumnName="Img" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Status">
+      <EntityTypeMapping TypeName="MapNetMonModel.TM_Status">
+        <MappingFragment StoreEntitySet="TM_Status">
+          <ScalarProperty Name="Width" ColumnName="Width" />
+          <ScalarProperty Name="Img" ColumnName="Img" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Neighbor">
+      <EntityTypeMapping TypeName="MapNetMonModel.TD_Neighbor">
+        <MappingFragment StoreEntitySet="TD_Neighbor">
+          <ScalarProperty Name="AnchorB" ColumnName="AnchorB" />
+          <ScalarProperty Name="AnchorA" ColumnName="AnchorA" />
+          <ScalarProperty Name="NIP" ColumnName="NIP" />
+          <ScalarProperty Name="IP" ColumnName="IP" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Command">
+      <EntityTypeMapping TypeName="MapNetMonModel.TM_Command">
+        <MappingFragment StoreEntitySet="TM_Command">
+          <ScalarProperty Name="Command" ColumnName="Command" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Type">
+      <EntityTypeMapping TypeName="MapNetMonModel.TM_Type">
+        <MappingFragment StoreEntitySet="TM_Type">
+          <ScalarProperty Name="Width" ColumnName="Width" />
+          <ScalarProperty Name="Img" ColumnName="Img" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Authentication">
+      <EntityTypeMapping TypeName="MapNetMonModel.TM_Authentication">
+        <MappingFragment StoreEntitySet="TM_Authentication">
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Factory">
+      <EntityTypeMapping TypeName="MapNetMonModel.TM_Factory">
+        <MappingFragment StoreEntitySet="TM_Factory">
+          <ScalarProperty Name="Img" ColumnName="Img" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Device">
+      <EntityTypeMapping TypeName="MapNetMonModel.TD_Device">
+        <MappingFragment StoreEntitySet="TD_Device">
+          <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+          <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="LastOn" ColumnName="LastOn" />
+          <ScalarProperty Name="UplinkPort" ColumnName="UplinkPort" />
+          <ScalarProperty Name="UplinkIP" ColumnName="UplinkIP" />
+          <ScalarProperty Name="ConfigFile" ColumnName="ConfigFile" />
+          <ScalarProperty Name="YMain" ColumnName="YMain" />
+          <ScalarProperty Name="XMain" ColumnName="XMain" />
+          <ScalarProperty Name="Y" ColumnName="Y" />
+          <ScalarProperty Name="X" ColumnName="X" />
+          <ScalarProperty Name="MainDevice" ColumnName="MainDevice" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="FactoryId" ColumnName="FactoryId" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="IP" ColumnName="IP" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Predefined">
+      <EntityTypeMapping TypeName="MapNetMonModel.TM_Predefined">
+        <MappingFragment StoreEntitySet="TM_Predefined">
+          <ScalarProperty Name="HilightDuration" ColumnName="HilightDuration" />
+          <ScalarProperty Name="ChildHilightColor" ColumnName="ChildHilightColor" />
+          <ScalarProperty Name="ParentHilightColor" ColumnName="ParentHilightColor" />
+          <ScalarProperty Name="Unit" ColumnName="Unit" />
+          <ScalarProperty Name="LineColor" ColumnName="LineColor" />
+          <ScalarProperty Name="LineWidth" ColumnName="LineWidth" />
+          <ScalarProperty Name="FontSize" ColumnName="FontSize" />
+          <ScalarProperty Name="BGWidth" ColumnName="BGWidth" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VW_Device_Summary">
+      <EntityTypeMapping TypeName="MapNetMonModel.VW_Device_Summary">
+        <MappingFragment StoreEntitySet="VW_Device_Summary">
+          <ScalarProperty Name="Down" ColumnName="Down" />
+          <ScalarProperty Name="Up" ColumnName="Up" />
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="Site" ColumnName="Site" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_DeadTransaction">
+      <EntityTypeMapping TypeName="MapNetMonModel.TD_DeadTransaction">
+        <MappingFragment StoreEntitySet="TD_DeadTransaction">
+          <ScalarProperty Name="RebornDate" ColumnName="RebornDate" />
+          <ScalarProperty Name="DeadDate" ColumnName="DeadDate" />
+          <ScalarProperty Name="IP" ColumnName="IP" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

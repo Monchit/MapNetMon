@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MapNetMonModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="MapNetMonModelStoreContainer">
+    <EntitySet Name="TD_DeadTransaction" EntityType="MapNetMonModel.Store.TD_DeadTransaction" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TD_Device" EntityType="MapNetMonModel.Store.TD_Device" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Factory" EntityType="MapNetMonModel.Store.TM_Factory" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TM_Type" EntityType="MapNetMonModel.Store.TM_Type" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="VW_Emp_Admin" EntityType="MapNetMonModel.Store.VW_Emp_Admin" store:Type="Views" store:Schema="dbo" store:Name="VW_Emp_Admin">
+      <DefiningQuery>SELECT 
+      [VW_Emp_Admin].[emp_code] AS [emp_code], 
+      [VW_Emp_Admin].[username] AS [username], 
+      [VW_Emp_Admin].[password] AS [password], 
+      [VW_Emp_Admin].[emp_fname] AS [emp_fname], 
+      [VW_Emp_Admin].[emp_lname] AS [emp_lname], 
+      [VW_Emp_Admin].[emp_position] AS [emp_position], 
+      [VW_Emp_Admin].[position_name] AS [position_name], 
+      [VW_Emp_Admin].[email] AS [email], 
+      [VW_Emp_Admin].[plant_id] AS [plant_id], 
+      [VW_Emp_Admin].[plant_name] AS [plant_name], 
+      [VW_Emp_Admin].[dept_id] AS [dept_id], 
+      [VW_Emp_Admin].[dept_name] AS [dept_name], 
+      [VW_Emp_Admin].[group_id] AS [group_id], 
+      [VW_Emp_Admin].[group_name] AS [group_name], 
+      [VW_Emp_Admin].[sub_group_id] AS [sub_group_id], 
+      [VW_Emp_Admin].[sub_group] AS [sub_group], 
+      [VW_Emp_Admin].[emp_status] AS [emp_status], 
+      [VW_Emp_Admin].[LeafOrganize] AS [LeafOrganize], 
+      [VW_Emp_Admin].[LeafOrgGroupId] AS [LeafOrgGroupId], 
+      [VW_Emp_Admin].[LeafOrgGroup] AS [LeafOrgGroup], 
+      [VW_Emp_Admin].[position_level] AS [position_level], 
+      [VW_Emp_Admin].[LeafOrgLevel] AS [LeafOrgLevel], 
+      [VW_Emp_Admin].[ext] AS [ext], 
+      [VW_Emp_Admin].[AdditionalEmail] AS [AdditionalEmail], 
+      [VW_Emp_Admin].[email_ci_ai] AS [email_ci_ai]
+      FROM [dbo].[VW_Emp_Admin] AS [VW_Emp_Admin]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_TD_DeadTransaction_TD_Device" Association="MapNetMonModel.Store.FK_TD_DeadTransaction_TD_Device">
+      <End Role="TD_Device" EntitySet="TD_Device" />
+      <End Role="TD_DeadTransaction" EntitySet="TD_DeadTransaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_Device_TM_Type" Association="MapNetMonModel.Store.FK_TD_Device_TM_Type">
+      <End Role="TM_Type" EntitySet="TM_Type" />
+      <End Role="TD_Device" EntitySet="TD_Device" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TD_MainDevice_TM_Factory" Association="MapNetMonModel.Store.FK_TD_MainDevice_TM_Factory">
+      <End Role="TM_Factory" EntitySet="TM_Factory" />
+      <End Role="TD_Device" EntitySet="TD_Device" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="TD_DeadTransaction">
+    <Key>
+      <PropertyRef Name="IP" />
+      <PropertyRef Name="DeadDate" />
+    </Key>
+    <Property Name="IP" Type="nvarchar" Nullable="false" MaxLength="15" />
+    <Property Name="DeadDate" Type="datetime" Nullable="false" />
+    <Property Name="RebornDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="TD_Device">
+    <Key>
+      <PropertyRef Name="IP" />
+    </Key>
+    <Property Name="IP" Type="nvarchar" Nullable="false" MaxLength="15" />
+    <Property Name="Type" Type="smallint" Nullable="false" />
+    <Property Name="FactoryId" Type="tinyint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
+    <Property Name="MainDevice" Type="bit" Nullable="false" />
+    <Property Name="X" Type="int" Nullable="false" />
+    <Property Name="Y" Type="int" Nullable="false" />
+    <Property Name="XMain" Type="int" />
+    <Property Name="YMain" Type="int" />
+    <Property Name="ConfigFile" Type="nvarchar" MaxLength="255" />
+    <Property Name="UplinkIP" Type="nvarchar" MaxLength="15" />
+    <Property Name="UplinkPort" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastOn" Type="datetime" />
+    <Property Name="Status" Type="bit" Nullable="false" />
+    <Property Name="EntryDate" Type="datetime" Nullable="false" />
+    <Property Name="LastUpdateDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="TM_Factory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="tinyint" Nullable="false" />
+    <Property Name="PlantId" Type="tinyint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Img" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="TM_Type">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="smallint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="Img" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="Width" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'MapNetMon.dbo.VW_Emp_Admin' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="VW_Emp_Admin">
+    <Key>
+      <PropertyRef Name="emp_code" />
+      <PropertyRef Name="LeafOrgLevel" />
+    </Key>
+    <Property Name="emp_code" Type="nvarchar" Nullable="false" MaxLength="25" />
+    <Property Name="username" Type="nvarchar" MaxLength="255" />
+    <Property Name="password" Type="nvarchar" MaxLength="255" />
+    <Property Name="emp_fname" Type="nvarchar" MaxLength="255" />
+    <Property Name="emp_lname" Type="nvarchar" MaxLength="255" />
+    <Property Name="emp_position" Type="tinyint" />
+    <Property Name="position_name" Type="nvarchar" MaxLength="255" />
+    <Property Name="email" Type="nvarchar" MaxLength="255" />
+    <Property Name="plant_id" Type="int" />
+    <Property Name="plant_name" Type="nvarchar" MaxLength="255" />
+    <Property Name="dept_id" Type="int" />
+    <Property Name="dept_name" Type="nvarchar" MaxLength="255" />
+    <Property Name="group_id" Type="int" />
+    <Property Name="group_name" Type="nvarchar" MaxLength="255" />
+    <Property Name="sub_group_id" Type="int" />
+    <Property Name="sub_group" Type="nvarchar" MaxLength="255" />
+    <Property Name="emp_status" Type="nchar" MaxLength="10" />
+    <Property Name="LeafOrganize" Type="nvarchar" MaxLength="255" />
+    <Property Name="LeafOrgGroupId" Type="int" />
+    <Property Name="LeafOrgGroup" Type="nvarchar" MaxLength="255" />
+    <Property Name="position_level" Type="tinyint" />
+    <Property Name="LeafOrgLevel" Type="int" Nullable="false" />
+    <Property Name="ext" Type="nvarchar" MaxLength="50" />
+    <Property Name="AdditionalEmail" Type="nvarchar" MaxLength="150" />
+    <Property Name="email_ci_ai" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <Association Name="FK_TD_DeadTransaction_TD_Device">
+    <End Role="TD_Device" Type="MapNetMonModel.Store.TD_Device" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_DeadTransaction" Type="MapNetMonModel.Store.TD_DeadTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TD_Device">
+        <PropertyRef Name="IP" />
+      </Principal>
+      <Dependent Role="TD_DeadTransaction">
+        <PropertyRef Name="IP" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_Device_TM_Type">
+    <End Role="TM_Type" Type="MapNetMonModel.Store.TM_Type" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Device" Type="MapNetMonModel.Store.TD_Device" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Type">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TD_Device">
+        <PropertyRef Name="Type" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TD_MainDevice_TM_Factory">
+    <End Role="TM_Factory" Type="MapNetMonModel.Store.TM_Factory" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TD_Device" Type="MapNetMonModel.Store.TD_Device" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TM_Factory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TD_Device">
+        <PropertyRef Name="FactoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

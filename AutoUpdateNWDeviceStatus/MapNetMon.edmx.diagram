@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2262387119e7488aa933a95e9039b9c3" Name="Diagram1">
+        <EntityTypeShape EntityType="MapNetMonModel.TM_Type" Width="1.5" PointX="6.125" PointY="4.25" />
+        <EntityTypeShape EntityType="MapNetMonModel.TM_Factory" Width="1.5" PointX="11" PointY="4.25" />
+        <EntityTypeShape EntityType="MapNetMonModel.VW_Emp_Admin" Width="1.5" PointX="3.25" PointY="3" />
+        <EntityTypeShape EntityType="MapNetMonModel.TD_Device" Width="1.5" PointX="8.625" PointY="4.25" />
+        <AssociationConnector Association="MapNetMonModel.FK_TD_Device_TM_Type" />
+        <AssociationConnector Association="MapNetMonModel.FK_TD_MainDevice_TM_Factory" />
+        <EntityTypeShape EntityType="MapNetMonModel.TD_DeadTransaction" Width="1.5" PointX="11" PointY="6.875" />
+        <AssociationConnector Association="MapNetMonModel.FK_TD_DeadTransaction_TD_Device" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

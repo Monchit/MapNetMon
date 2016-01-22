@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="MapNetMonModelStoreContainer" CdmEntityContainer="MapNetMonEntities">
+    <EntitySetMapping Name="TM_Type">
+      <EntityTypeMapping TypeName="MapNetMonModel.TM_Type">
+        <MappingFragment StoreEntitySet="TM_Type">
+          <ScalarProperty Name="Width" ColumnName="Width" />
+          <ScalarProperty Name="Img" ColumnName="Img" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TM_Factory">
+      <EntityTypeMapping TypeName="MapNetMonModel.TM_Factory">
+        <MappingFragment StoreEntitySet="TM_Factory">
+          <ScalarProperty Name="Img" ColumnName="Img" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VW_Emp_Admin">
+      <EntityTypeMapping TypeName="MapNetMonModel.VW_Emp_Admin">
+        <MappingFragment StoreEntitySet="VW_Emp_Admin">
+          <ScalarProperty Name="email_ci_ai" ColumnName="email_ci_ai" />
+          <ScalarProperty Name="AdditionalEmail" ColumnName="AdditionalEmail" />
+          <ScalarProperty Name="ext" ColumnName="ext" />
+          <ScalarProperty Name="LeafOrgLevel" ColumnName="LeafOrgLevel" />
+          <ScalarProperty Name="position_level" ColumnName="position_level" />
+          <ScalarProperty Name="LeafOrgGroup" ColumnName="LeafOrgGroup" />
+          <ScalarProperty Name="LeafOrgGroupId" ColumnName="LeafOrgGroupId" />
+          <ScalarProperty Name="LeafOrganize" ColumnName="LeafOrganize" />
+          <ScalarProperty Name="emp_status" ColumnName="emp_status" />
+          <ScalarProperty Name="sub_group" ColumnName="sub_group" />
+          <ScalarProperty Name="sub_group_id" ColumnName="sub_group_id" />
+          <ScalarProperty Name="group_name" ColumnName="group_name" />
+          <ScalarProperty Name="group_id" ColumnName="group_id" />
+          <ScalarProperty Name="dept_name" ColumnName="dept_name" />
+          <ScalarProperty Name="dept_id" ColumnName="dept_id" />
+          <ScalarProperty Name="plant_name" ColumnName="plant_name" />
+          <ScalarProperty Name="plant_id" ColumnName="plant_id" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="position_name" ColumnName="position_name" />
+          <ScalarProperty Name="emp_position" ColumnName="emp_position" />
+          <ScalarProperty Name="emp_lname" ColumnName="emp_lname" />
+          <ScalarProperty Name="emp_fname" ColumnName="emp_fname" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="emp_code" ColumnName="emp_code" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_Device">
+      <EntityTypeMapping TypeName="MapNetMonModel.TD_Device">
+        <MappingFragment StoreEntitySet="TD_Device">
+          <ScalarProperty Name="LastUpdateDate" ColumnName="LastUpdateDate" />
+          <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="LastOn" ColumnName="LastOn" />
+          <ScalarProperty Name="UplinkPort" ColumnName="UplinkPort" />
+          <ScalarProperty Name="UplinkIP" ColumnName="UplinkIP" />
+          <ScalarProperty Name="ConfigFile" ColumnName="ConfigFile" />
+          <ScalarProperty Name="YMain" ColumnName="YMain" />
+          <ScalarProperty Name="XMain" ColumnName="XMain" />
+          <ScalarProperty Name="Y" ColumnName="Y" />
+          <ScalarProperty Name="X" ColumnName="X" />
+          <ScalarProperty Name="MainDevice" ColumnName="MainDevice" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="FactoryId" ColumnName="FactoryId" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="IP" ColumnName="IP" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TD_DeadTransaction">
+      <EntityTypeMapping TypeName="MapNetMonModel.TD_DeadTransaction">
+        <MappingFragment StoreEntitySet="TD_DeadTransaction">
+          <ScalarProperty Name="RebornDate" ColumnName="RebornDate" />
+          <ScalarProperty Name="DeadDate" ColumnName="DeadDate" />
+          <ScalarProperty Name="IP" ColumnName="IP" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

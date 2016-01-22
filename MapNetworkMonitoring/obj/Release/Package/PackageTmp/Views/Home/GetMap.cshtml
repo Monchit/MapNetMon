@@ -1,0 +1,711 @@
+﻿@using MapNetworkMonitoring.Models
+@model IQueryable<TD_Device>
+
+@{
+    var db = new MapNetMonEntities();
+    var home = new MapNetworkMonitoring.Controllers.HomeController();
+}
+
+<script type="text/javascript">
+    $(function () {
+
+
+
+        var errorFlag = false;
+        var min = 5;
+        var duration = min * 60 * 1000;
+
+
+        setInterval(function () {
+            if (!errorFlag) {
+                $.post("@Url.Action("UpdateStatus", "Home")", "@ViewBag.Ret=@ViewBag.RetId", function (data) {
+                        if (data == 0) {
+                            // Update Error!!!
+                            window.alert("Update Status Error, Please Contact Administrator Professional!!");
+                            errorFlag = true;
+                        }
+                        else {
+                            // Still OK
+                            for (var i = 0; i < data.length; i++) {
+                                $("#" + data[i].id).attr("src", data[i].img);
+                            }
+                        }
+                    });
+                }
+            }, duration);
+
+
+
+
+
+
+        @if (TempData["Msg"] != null)
+	    {
+		    <text>window.alert("@TempData["Msg"]");</text>
+        }
+
+        $(".returnId").val(@ViewBag.RetId);
+
+        // Enable Dragable for Admin
+        @if (ViewBag.Mode == "admin")
+        {
+            <text>
+		     $(".device").draggable({
+                drag: function () {
+                    jqSimpleConnect.repaintAll();
+                },
+                stop: function (event, ui) {
+                    setPosition(ui.helper.children().last().text(), Math.round(ui.position.left), Math.round(ui.position.top));
+                }
+		     });
+            </text>
+        }
+        
+        // Draw Line
+        @foreach (var items in Model)
+        {
+            foreach (var item in items.TD_Neighbor)
+            {
+                <text>
+        jqSimpleConnect.connect("#@item.IP.Replace(".", "-")", "#@item.NIP.Replace(".", "-")", { radius: '@ViewBag.predefined.LineWidth', color: '@ViewBag.predefined.LineColor', anchorA: '@item.AnchorA', anchorB: '@item.AnchorB', roundedCorners: true });
+                </text>
+            }
+        }
+
+        // Save New Device Position
+        function setPosition(ip, x, y) {
+            $.post("@Url.Action("SetPosition", "Home")", "ip=" + ip + "&X=" + x + "&Y=" + y + "&level=@ViewBag.Level", function (data) {
+                if (data != 1) {
+                    window.alert("Save New Position Failed!!");
+                }
+            });
+        }
+
+        function getIntStatus(ip, name, upip, upport){
+
+            $.ajax({
+                url: "@Url.Action("GetInterfaceStatus", "Home")",
+                data: { ip : ip },
+                beforeSend: function(){
+                    $("#div-content").hide();
+                    $("#div-loading").show();
+                },
+                success: function(data){
+                    $("#device-ip").text(ip);
+                    $("#last-update").text(new Date());
+                    $.get("@Url.Action("GetDeviceUpTime", "Home")", "ip=" + ip, function(uptime){
+                        $("#up-time").text(uptime);
+                    });
+
+                    if(upip !== undefined){
+                        $("#up-ip").text(upip);
+                        $("#up-port").text(upport);
+                        $.get("@Url.Action("GetDeviceName", "Home")", "ip=" + upip, function(upname){
+                            $("#up-name").text(upname);
+                        });
+                    }
+
+                    if (name !== undefined) {
+                        $("#device-name").text(name);
+                    }
+
+                    $("#int-status").children().remove();
+                    $("#int-status").append("<div>" + data + "</div>");
+
+                    $("#div-loading").hide();
+                    $("#div-content").show();
+                }
+            });
+        }
+
+        // Context Menu
+        $.contextMenu({
+            selector: '.device',
+            @if (ViewBag.Mode != "admin") {<text>trigger: 'left',</text>}
+            callback: function (key, options) {
+                if (key == "factory") {
+                    window.location = "@Url.Action("GetMap", "Home")?facid=" + options.$trigger.attr("data-facid") + "@if (ViewBag.Mode == "admin") {<text>&mode=admin</text>}";
+                }
+                else if(key == "intstatus"){
+                    $("#div-loading").show();
+                    getIntStatus(options.$trigger.attr("data-ip"), options.$trigger.attr("data-name"), options.$trigger.attr("data-up-ip"), options.$trigger.attr("data-up-port"));
+                    intdialog.dialog("open");
+                }
+                else if (key == "hilightParent") {
+                    $("div[data-ip='" + options.$trigger.attr("data-up-ip") + "']").effect("highlight", { color: "@ViewBag.predefined.ParentHilightColor" }, @ViewBag.predefined.HilightDuration);
+                }
+                else if (key == "hilightChild") {
+                    $("div[data-up-ip='" + options.$trigger.attr("data-ip") + "']").effect("highlight", { color: "@ViewBag.predefined.ChildHilightColor" }, @ViewBag.predefined.HilightDuration);
+                }
+                else if (key == "detail") {
+                    window.open("http://" + options.$trigger.children().last().text());
+                }
+                else if(key ==  "edit"){
+                    $.get("@Url.Action("GetDevice", "Home")", "ip=" + options.$trigger.attr("data-ip"), function(data){
+                        // Device Details
+                        $("#txtName").val(data.Name);
+                        $("#selType").children().each(function(){
+                            if ($(this).val() == data.Type) {
+                                $(this).attr("selected", "selected");
+                            }
+                        });
+                        $("#txtIP").val(data.IP);
+                        $("#selUplinkIP").children().each(function () {
+                            if ($(this).val() == data.UplinkIP) {
+                                $(this).attr("selected", "selected");
+                            }
+                        });
+                        $("#txtUplinkPort").val(data.UplinkPort);
+                        $("#uplConfig").next().remove();
+                        if (data.ConfigFile != '') {
+                            $("#uplConfig").after("<a href='" + data.ConfigFile + "' target='_blank'>Download</a>");
+                        }
+
+                        // Device Neighbor
+                        $("#nieghlorListEdit").children().remove();
+                        for (var i = 0; i < data.Neighbor.length; i++) {
+                            var nStr = "<div><span>" + data.Neighbor[i].Type + " - " + data.Neighbor[i].NIP + " - " + data.Neighbor[i].Name + "</span><span><input type='hidden' value='" + data.Neighbor[i].NIP + "' name='NIP'><input type='hidden' value='" + data.Neighbor[i].AnchorA + "' name='A'><input type='hidden' value='" + data.Neighbor[i].AnchorB + "' name='B'></span> <span><a class='remove-neighbor' href='#'>Remove</a></span></div>";
+
+                            $("#nieghlorListEdit").append(nStr);
+                        }
+
+                        dialogedit.dialog("open");
+                    });
+
+                    
+                }
+            },
+            items: {
+                @if (ViewBag.Level == "Plant")
+                { <text>"factory": { name: "Go To Factory", icon: "copy" },</text> }
+                "intstatus": { name: "Interface Status", icon: "quit" },
+                "hilightParent": { name: "Hilight Parent Neighbor", icon: "cut" },
+                "hilightChild": { name: "Hilight Child Neighbors", icon: "cut" },
+                "detail": { name: "Go To Web Console", icon: "add" }
+                @if (ViewBag.Mode == "admin")
+                { <text>,"edit": { name: "Setting", icon: "paste" }</text> }
+            }
+        });
+
+        // Add Dialog
+        dialogadd = $("#dialog-form").dialog({
+            autoOpen: false,
+            width: 400,
+            modal: true,
+            buttons: {
+                "Add Device": function () {
+                    $("#frmAdd").submit();
+                },
+                Cancel: function () {
+                    dialogadd.dialog("close");
+                    $(this).find("form")[0].reset();
+                    // Remove current child
+                    $("#selNeighbor").children().remove();
+                }
+            },
+            close: function () {
+                $(this).find("form")[0].reset();
+                // Remove current child
+                $("#selNeighbor").children().remove();
+            }
+        });
+
+        // Edit Dialog
+        dialogedit = $("#dialog-edit").dialog({
+            autoOpen: false,
+            width: 400,
+            modal: true,
+            buttons: {
+                Update: function () {
+                    $("#frmEdit").submit();
+                },
+                Delete: function(){
+                    if (window.confirm("Are you sure to delete device?")) {
+                        $.post("@Url.Action("DeleteDevice", "Home")", "ip=" + $("#txtIP").val(), function(data){
+                            if (data == true) {
+                                window.alert("Delete " + $("#txtIP").val() + " Success");
+                            }
+                            else {
+                                window.alert("Delete " + $("#txtIP").val() + " Fail");
+                            }
+                        });
+                    }
+                },
+                Cancel: function () {
+                    dialogedit.dialog("close");
+                    $(this).find("form")[0].reset();
+                    // Remove current child
+                    $("#selNeighbor").children().remove();
+                }
+            },
+            close: function () {
+                $(this).find("form")[0].reset();
+                // Remove current child
+                $("#selNeighbor").children().remove();
+            }
+        });
+
+        // Interface Status Dialog
+        intdialog = $("#dialog-int-status").dialog({
+            autoOpen: false,
+            width: 600,
+            position: { my: "center", at: "top" },
+            modal: true,
+            buttons: {
+                "Refresh": function () {
+                    getIntStatus($("#device-ip").text());
+                }
+            },
+            close: function () {
+                $("#int-status").children().remove();
+            }
+        });
+
+        // Ping Dialog
+        pingdialog = $("#dialog-ping").dialog({
+            autoOpen: false,
+            width: 500,
+            height: 320,
+            position: { my: "center", at: "center" },
+            modal: true,
+            close: function () {
+                $("#ping-result").children().remove();
+            }
+        });
+
+        $(".add").button().on("click", function () {
+            dialogadd.dialog("open");
+        });
+
+        $(".ping").button().on("click", function () {
+            pingdialog.dialog("open");
+        });
+
+        $(".home").button().on("click", function () {
+        });
+
+
+        $.widget("custom.iconselectmenu", $.ui.selectmenu, {
+            _renderItem: function (ul, item) {
+                var li = $("<li>", { text: item.label });
+
+                if (item.disabled) {
+                    li.addClass("ui-state-disabled");
+                }
+
+                $("<span>", {
+                    style: item.element.attr("data-style"),
+                    "class": "ui-icon " + item.element.attr("data-class")
+                })
+                  .appendTo(li);
+
+                return li.appendTo(ul);
+            }
+        });
+
+        // Home Button
+        $(".home").click(function () {
+            $.get("@Url.Action("GetPlantId", "Home")?facid=@ViewBag.FacId", null, function (data) {
+                window.location = "@Url.Action("GetMap", "Home")?plantid=" + data + "@if (ViewBag.Mode == "admin")
+                                                                                     {<text>&mode=admin</text>}";
+            });
+        });
+
+        $(".btnAddNeighbor").click(function () {
+
+            var suffix = '';
+            if ($(this).attr("id") == "btnAddNeighborAdd") {
+                suffix = "Add";
+            }
+            else {
+                suffix = "Edit";
+            }
+            
+            if ($("#nieghlorList" + suffix).find("input[value='" + $("#selNeighbor" + suffix).val() + "']").val() == $("#selNeighbor" + suffix).val()) {
+                window.alert("Neighbor already exist!!");
+                return false;
+            }
+            var str = "<div>";
+            str += "<span>" + $("#selNeighbor" + suffix + " option[value='" + $("#selNeighbor" + suffix).val() + "']").text() + "</span>";
+            str += "<span>" +
+                "<input type='hidden' name='NIP' value='" + $("#selNeighbor" + suffix).val() + "' />" +
+                "<input type='hidden' name='A' value='" + $("#selA" + suffix).val() + "' />" +
+                "<input type='hidden' name='B' value='" + $("#selB" + suffix).val() + "' />" +
+                "</span>";
+            str += " <span><a href='#' class='remove-neighbor'>Remove</a></span>";
+            str += "</div>";
+
+            $("#nieghlorList" + suffix).append(str);
+        });
+
+        $(document).on("click", ".remove-neighbor", function () {
+            $(this).parent().parent().remove();
+            return false;
+        });
+
+        $("#frmPing").submit(function () {
+            $("#btnPingIP").attr("disabled", "disabled");
+            $("#ping-result").children().remove();
+            var time = setInterval(function () {
+
+                if ($("#ping-result").children().length == 4) {
+                    window.clearInterval(time);
+
+                    var success = 0;
+                    var fail = 0;
+                    $("#ping-result").children().each(function () {
+                        // Ping Success
+                        if ($(this).text().indexOf('unreachable') === -1) {
+                            success++;
+                        }
+                            // Ping Fail
+                        else {
+                            fail++;
+                        }
+                    });
+
+                    var strResult = "<div style='color: yellow'><br />Packets: Sent = " + (success + fail) + ", Success = " + success + ", Lost = " + fail + " (" + ((success / (success + fail)) * 100) + "% success)</div>";
+                    strResult += "<div>" + (fail == 0 ? "<h3 style='color: green'>Ping Success</h3>" : "<h3 style='color: red'>Ping Fail</h3>") + "</div>";
+                    $("#ping-result").append(strResult);
+                    $("#txtPingIP").select();
+                    $("#btnPingIP").removeAttr("disabled");
+
+                    return false;
+                }
+
+                $.post("@Url.Action("Ping", "Home")", { ip: $.trim($("#txtPingIP").val()) }, function (data) {
+                    $("#ping-result").append(data);
+                });
+
+            }, 1000);
+
+            return false;
+
+        });
+
+
+    });
+</script>
+
+
+
+
+
+
+<div class="container">
+    <img class="map" src="@if(ViewBag.BG != null) { @Url.Content(home.root + ViewBag.BG) } else { @Url.Content("~/Image/Factory/default.jpg") }" style="width: @ViewBag.predefined.BGWidth@ViewBag.predefined.Unit" />
+    <div class="tool-bar">
+        @if (ViewBag.Level == "Factory")
+        { <img class="nav home" src="@Url.Content("~/Image/Misc/home.png")" /> }
+        @if (Request.QueryString["mode"] == "admin")
+        { 
+            <img class="nav add" src="@Url.Content("~/Image/Misc/add.png")" />
+            <img class="nav ping" src="@Url.Content("~/Image/Misc/prompt.png")" />
+        }
+    </div>
+
+    @{ List<byte> warnFac = ViewBag.WarnFactory != null ? ViewBag.WarnFactory : new List<byte>(); }
+
+    @foreach (var item in Model)
+    {
+        <div class="device @if(ViewBag.Level != "Plant" && item.MainDevice) { <text>red-border</text> }" style="top: @if (ViewBag.Level == "Plant")
+                                        { @item.YMain.Value }
+                                        else
+                                        { @item.Y }@ViewBag.predefined.Unit; left: @if (ViewBag.Level == "Plant")
+                                                                                                                                             { @item.XMain }
+                                                                                                                                             else
+                                                                                                                                             { @item.X }@ViewBag.predefined.Unit;" data-facid="@item.FactoryId" data-ip="@item.IP" data-name="@item.Name" data-up-ip="@item.UplinkIP" data-up-port="@item.UplinkPort">
+            <div class="div-img">
+                <img class="image img-status" id="status-@item.IP.Replace(".", "-")" width="@item.TM_Status.Width@ViewBag.predefined.Unit" src="@if (!warnFac.Contains(item.FactoryId))
+                                                                                                                                                { @Url.Content(home.root + item.TM_Status.Img) }
+                                                                                                                                                else
+                                                                                                                                                { @Url.Content("~/Image/Status/warn.png") }" />
+                <img class="image img-device" id="@item.IP.Replace(".", "-")" width="@item.TM_Type.Width@ViewBag.predefined.Unit" src="@Url.Content(home.root + item.TM_Type.Img)" />
+                @if (ViewBag.Level == "Plant")
+                {
+                    <div class="inline device-count">
+                        <div class="text-device" style="font-size: @ViewBag.predefined.FontSize@ViewBag.predefined.Unit">Switch (@db.TD_Device.Where(w => w.FactoryId == item.FactoryId && w.Type == 1).Count())</div>
+                        <div class="text-device" style="font-size: @ViewBag.predefined.FontSize@ViewBag.predefined.Unit">AP (@db.TD_Device.Where(w => w.FactoryId == item.FactoryId && w.Type == 2).Count())</div>
+                    </div>
+                }
+            </div>
+            <div class="text-device" style="font-size: @ViewBag.predefined.FontSize@ViewBag.predefined.Unit">@item.Name</div>
+            <div class="text-device" style="font-size: @ViewBag.predefined.FontSize@ViewBag.predefined.Unit">@item.IP</div>
+        </div>
+    }
+</div>
+
+
+
+
+
+
+@* Dialog Add *@
+<div id="dialog-form" title="Add new Network Device">
+    <p class="section">Device Details</p>
+    
+    <form class="frmAdd" id="frmAdd" method="post" enctype="multipart/form-data" action="@Url.Action("AddDevice", "Home")">
+
+        @*Device Details*@
+        @if (ViewBag.Level == "Plant")
+        { <input type="hidden" name="mainDevice" value="true" /> }
+        else
+        { <input type="hidden" name="mainDevice" value="false" /> }
+        <input type="hidden" class="returnId" name="returnId" />
+
+        <table>
+            <tr>
+                <td class="display">Device Name</td>
+                <td><input type="text" name="txtName" /></td>
+            </tr>
+            <tr>
+                <td>Device Type</td>
+                <td><select name="selType" class="sel">
+                        <option value="0">Select</option>
+                        @foreach (var item in ViewBag.DeviceType)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select></td>
+            </tr>
+            <tr>
+                <td>IP Address</td>
+                <td><input type="text" name="txtIP" /></td>
+            </tr>
+            <tr>
+            @if (ViewBag.PlantId != null)
+            {
+                <td>Location</td>
+                <td><select name="selLocation" class="sel selLocation">
+                        <option value="0">Select</option>
+                        @foreach (var item in ViewBag.Location)
+                        {
+                            <option value="@item.Id">@item.TM_Plant.Name - @item.Name</option>
+                        }
+                    </select></td>
+            }
+            else
+            {
+                <td><input type="hidden" name="selLocation" value="@ViewBag.FacId" /></td>
+            }  
+            </tr> 
+            <tr>
+                <td>Uplink IP</td>
+                <td>
+                    <select name="selUplinkIP" class="sel selNeighbor">
+                        <option value="0">Select</option>
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.IP">@item.TM_Type.Name - @item.IP - @item.Name</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Uplink Port</td>
+                <td><input type="text" name="txtUplinkPort" /></td>
+            </tr>
+            <tr>
+                <td>Config File(*.txt)</td>
+                <td><input type="file" name="uplConfig" /></td>
+            </tr>
+        </table>
+
+        @*Device Neighbor*@
+        <p class="section">Device Connection</p>
+
+        <table>
+            <tr>
+                <td class="display">Neighbor</td>
+                <td>
+                    <select name="selNeighbor" id="selNeighborAdd" class="sel selNeighbor">
+                        <option value="0">Select</option>
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.IP">@item.TM_Type.Name - @item.IP - @item.Name</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Connector A</td>
+                <td><select name="selA" id="selAAdd" class="sel">
+                        <option value="horizonal">horizonal</option>
+                        <option value="vertical" selected="selected">vertical</option>
+                    </select></td>
+            </tr>
+            <tr>
+                <td>Connector B</td>
+                <td><select name="selB" id="selBAdd" class="sel">
+                        <option value="horizonal" selected="selected">horizonal</option>
+                        <option value="vertical">vertical</option>
+                    </select></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="button" name="btnAddNeighbor" class="btnAddNeighbor" id="btnAddNeighborAdd">Add Neighbor</button></td>
+            </tr>
+        </table>
+
+        <div id="nieghlorListAdd"></div>
+        
+    </form>
+</div>
+
+
+
+
+
+@* Dialog Edit *@
+<div id="dialog-edit" title="Edit Network Device">
+    <p class="section">Device Details</p>
+    
+    <form class="frmEdit" id="frmEdit" enctype="multipart/form-data" method="post" action="@Url.Action("EditDevice", "Home")">
+
+        @*Device Details*@
+        @if (ViewBag.Level == "Plant")
+        { <input type="hidden" name="mainDevice" value="true" /> }
+        else
+        { <input type="hidden" name="mainDevice" value="false" /> }
+        <input type="hidden" class="returnId" name="returnId" />
+
+        <table>
+            <tr>
+                <td class="display">Device Name</td>
+                <td><input type="text" name="txtName" id="txtName" /></td>
+            </tr>
+            <tr>
+                <td>Device Type</td>
+                <td><select name="selType" id="selType" class="sel">
+                        <option value="0">Select</option>
+                        @foreach (var item in ViewBag.DeviceType)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select></td>
+            </tr>
+            <tr>
+                <td>IP Address</td>
+                <td><input type="text" name="txtIP" id="txtIP" /></td>
+            </tr>
+            <tr>
+            @if (ViewBag.PlantId != null)
+            {
+                <td>Location</td>
+                <td><select name="selLocation" id="selLocation" class="sel selLocation">
+                        <option value="0">Select</option>
+                        @foreach (var item in ViewBag.Location)
+                        {
+                            <option value="@item.Id">@item.TM_Plant.Name - @item.Name</option>
+                        }
+                    </select></td>
+                    }
+                    else
+                    {
+                        <td><input type="hidden" name="selLocation" value="@ViewBag.FacId" /></td>
+                    }  
+            </tr> 
+            <tr>
+                <td>Uplink IP</td>
+                <td>
+                    <select name="selUplinkIP" id="selUplinkIP" class="sel selNeighbor">
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.IP">@item.TM_Type.Name - @item.IP - @item.Name</option>
+                        }
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <td>Uplink Port</td>
+                <td><input type="text" id="txtUplinkPort" name="txtUplinkPort" /></td>
+            </tr>
+            <tr>
+                <td>Config File(*.txt)</td>
+                <td><input type="file" name="uplConfig" id="uplConfig" /></td>
+            </tr>
+        </table>
+
+        @*Device Neighbor*@
+        <p class="section">Device Connection</p>
+
+        <table>
+            <tr>
+                <td class="display">Neighbor</td>
+                <td>
+                    <select name="selNeighbor" id="selNeighborEdit" class="sel selNeighbor">
+                        <option value="0">Select</option>
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.IP">@item.TM_Type.Name - @item.IP - @item.Name</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Connector A</td>
+                <td><select name="selA" id="selAEdit" class="sel">
+                        <option value="horizonal">horizonal</option>
+                        <option value="vertical" selected="selected">vertical</option>
+                    </select></td>
+            </tr>
+            <tr>
+                <td>Connector B</td>
+                <td><select name="selB" id="selBEdit" class="sel">
+                        <option value="horizonal" selected="selected">horizonal</option>
+                        <option value="vertical">vertical</option>
+                    </select></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="button" name="btnAddNeighbor" class="btnAddNeighbor" id="btnAddNeighborEdit">Add Neighbor</button></td>
+            </tr>
+        </table>
+
+        <div id="nieghlorListEdit"></div>
+        
+    </form>
+</div>
+
+
+
+
+
+@* Dialog Port Status *@
+<div id="dialog-int-status" title="Interface Status">
+
+    <div id="div-loading" class="text-center">
+        <img src="@Url.Content("~/Image/Misc/ajax-loader.gif")" /><br />
+        Loading...
+    </div>
+
+    <div id="div-content">
+        <p class="section">
+            <span>Device Details: <span id="device-ip"></span> - <span id="device-name"></span></span><br />
+            <span class="updated"><span class="font-bold">Up Time: </span><span id="up-time"></span></span><br />
+            <span class="updated"><span class="font-bold">Updated: </span><span id="last-update"></span></span><br /><br />
+            <span class="updated">
+                <span class="font-bold">Uplink To Device IP: </span><span id="up-ip"></span><br />
+                <span class="font-bold">Uplink To Device Name: </span><span id="up-name"></span><br />
+                <span class="font-bold">Uplink Local Port: </span><span id="up-port"></span><br />
+            </span>
+        </p>
+
+        <div id="int-status"></div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@* Dialog Ping *@
+<div id="dialog-ping" title="Ping Network Device">
+    <form id="frmPing">
+        <div>IP Address <input type="text" id="txtPingIP" /> <button type="submit" id="btnPingIP" class="btn">GO</button></div>
+    <p id="ping-result"></p>
+    </form>
+</div>
